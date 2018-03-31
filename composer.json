@@ -1,0 +1,33 @@
+{
+  "name": "aweitian/upload",
+  "description": "上传组件",
+  "type": "library",
+  "keywords": [
+    "aweitian",
+    "tiananwei",
+    "upload"
+  ],
+  "homepage": "https://github.com/aweitian/upload",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "awei.tian@qq.com",
+      "email": "531164479@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0",
+    "aweitian/filesystem":"~2.0"
+  },
+  "require-dev": {
+
+  },
+  "autoload": {
+    "files": [],
+    "psr-4": {
+      "Aw\\Upload\\": "src/"
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
