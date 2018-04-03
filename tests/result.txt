@@ -1,0 +1,19 @@
+array(3) {
+  ["code"]=>
+  int(200)
+  ["message"]=>
+  string(2) "OK"
+  ["data"]=>
+  array(2) {
+    ["succ"]=>
+    array(2) {
+      ["img"]=>
+      string(58) "D:\dev\cnmpp\upload\tests/uploads\user\201804030937369.png"
+      ["xxx"]=>
+      string(58) "D:\dev\cnmpp\upload\tests/uploads\user\201804030937363.gif"
+    }
+    ["fail"]=>
+    array(0) {
+    }
+  }
+}

@@ -77,7 +77,10 @@ class Common
     public function init()
     {
         $this->maxsize = 2097152;//(1024*2)*1024=2097152 就是 2M
-        $this->setSaveDir("user");
+        $dir = $this->setSaveDir("user");
+        if (!$dir) {
+            throw new \Exception('Create directory ' . $this->directory . DIRECTORY_SEPARATOR . 'user failed.');
+        }
         $this->allowType = array();
         $this->allowType[] = self::CONTENT_TYPE_JPG;
         $this->allowType[] = self::CONTENT_TYPE_GIF;
@@ -216,7 +219,10 @@ class Common
     {
         if ($file["error"] != 0) return 5;
         if ($file["size"] > $this->maxsize) return 2;
-        if (!in_array($file["type"], $this->allowType)) return 3;
+//        var_dump();
+        $type = getimagesize($file['tmp_name']);
+        $type = $type['mime'];
+        if (!in_array($type, $this->allowType)) return 3;
         if (!is_writable($this->directory)) return 4;
         return 0;
     }
