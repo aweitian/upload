@@ -13,6 +13,7 @@ class Single extends Common
     public $new_path;
     public $size;
     public $access;
+    public $type;
 
     /**
      * @return bool
@@ -50,7 +51,6 @@ class Single extends Common
                 case 0:
                     $filename = $this->getFileName($file);
                     $this->origin_name = $file['name'];
-
                     $tmpName = $file["tmp_name"];
                     $new_path = $this->directory . DIRECTORY_SEPARATOR . $this->sub_dir . DIRECTORY_SEPARATOR . $filename;
                     if (function_exists("move_uploaded_file") && @move_uploaded_file($tmpName, $new_path)) {
@@ -58,12 +58,14 @@ class Single extends Common
                         $this->new_path = $new_path;
                         $this->size = $file["size"];
                         $this->access = $this->web_dir . '/' . $this->sub_dir . '/' . $filename;
+                        $this->type = $file["type"];
                         return true;
                     } elseif (@copy($tmpName, $new_path)) {
                         @chmod($filename, 0666);
                         $this->new_path = $new_path;
                         $this->size = $file["size"];
                         $this->access = $this->web_dir . '/' . $this->sub_dir . '/' . $filename;
+                        $this->type = $file["type"];
                         return true;
                     } else {
                         $this->error = $file["name"] . "不能移动临时文件";
