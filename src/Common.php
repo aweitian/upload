@@ -99,6 +99,7 @@ class Common
             throw new \Exception('Create directory ' . $this->directory . DIRECTORY_SEPARATOR . 'user failed.');
         }
         $this->whiteList = array();
+        $this->blackList = array();
         $this->whiteList[] = self::CONTENT_TYPE_JPG;
         $this->whiteList[] = self::CONTENT_TYPE_GIF;
         $this->whiteList[] = self::CONTENT_TYPE_PNG;
@@ -145,7 +146,7 @@ class Common
      */
     public function addBlackList($type)
     {
-        $this->whiteList[] = $type;
+        $this->blackList[] = $type;
         return $this;
     }
 
@@ -156,7 +157,7 @@ class Common
      */
     public function setBlackList($type)
     {
-        $this->whiteList = $type;
+        $this->blackList = $type;
         return $this;
     }
 
@@ -266,7 +267,7 @@ class Common
             if (!in_array($type, $this->whiteList)) return 3;
             return 0;
         } else {
-            if (!in_array($type, $this->whiteList)) return 0;
+            if (!in_array($type, $this->blackList)) return 0;
             return 3;
         }
     }
