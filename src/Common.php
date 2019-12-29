@@ -55,19 +55,36 @@ class Common
     const CONTENT_TYPE_PNG = "image/png";
     protected $directory; //上传至目录
     protected $maxsize; //最大上传大小
-    protected $allowType; //上传类型
+    protected $whiteList; //允许类型
+    protected $blackList; //禁止类型
     protected $rndFileMode;//true为随机文件名，FALSE保持原文件名
+
+    protected $web_dir = '/uploads';
 
     protected $sub_dir;
 
-    public function setUploadDir($dir)
+    protected $white_list_mode = true;
+
+    public function setUploadDir($dir, $web_acc)
     {
         if (!is_dir($dir)) {
             throw  new \Exception("$dir is not exist");
         }
         $this->directory = $dir;
+        $this->web_dir = rtrim($web_acc, '/');
     }
 
+    public function setAsWhiteList()
+    {
+        $this->white_list_mode = true;
+        return $this;
+    }
+
+    public function setAsBlackList()
+    {
+        $this->white_list_mode = false;
+        return $this;
+    }
 
     /**
      * 默认上传2M，只能上传JPG,GIF,PNG图片
@@ -81,10 +98,10 @@ class Common
         if (!$dir) {
             throw new \Exception('Create directory ' . $this->directory . DIRECTORY_SEPARATOR . 'user failed.');
         }
-        $this->allowType = array();
-        $this->allowType[] = self::CONTENT_TYPE_JPG;
-        $this->allowType[] = self::CONTENT_TYPE_GIF;
-        $this->allowType[] = self::CONTENT_TYPE_PNG;
+        $this->whiteList = array();
+        $this->whiteList[] = self::CONTENT_TYPE_JPG;
+        $this->whiteList[] = self::CONTENT_TYPE_GIF;
+        $this->whiteList[] = self::CONTENT_TYPE_PNG;
         $this->rndFileMode = true;
     }
 
@@ -104,9 +121,9 @@ class Common
      * @param int $type httpResponse::CONTENT_TYPE_JPG
      * @return $this
      */
-    public function addAllowType($type)
+    public function addWhiteList($type)
     {
-        $this->allowType[] = $type;
+        $this->whiteList[] = $type;
         return $this;
     }
 
@@ -115,9 +132,31 @@ class Common
      * @param array $type
      * @return $this
      */
-    public function setAllowType($type)
+    public function setWhiteList($type)
     {
-        $this->allowType = $type;
+        $this->whiteList = $type;
+        return $this;
+    }
+
+    /**
+     *
+     * @param int $type httpResponse::CONTENT_TYPE_JPG
+     * @return $this
+     */
+    public function addBlackList($type)
+    {
+        $this->whiteList[] = $type;
+        return $this;
+    }
+
+    /**
+     *
+     * @param array $type
+     * @return $this
+     */
+    public function setBlackList($type)
+    {
+        $this->whiteList = $type;
         return $this;
     }
 
@@ -201,11 +240,11 @@ class Common
                     $new_path = $this->directory . DIRECTORY_SEPARATOR . $this->sub_dir . DIRECTORY_SEPARATOR . $filename;
                     if (function_exists("move_uploaded_file") && @move_uploaded_file($tmpName, $new_path)) {
                         @chmod($filename, 0666);
-                        $return['data']["succ"][$fk] = $new_path;
+                        $return['data']["succ"][$fk] = $this->web_dir . '/' . $this->sub_dir . '/' . $filename;
                         break;
                     } elseif (@copy($tmpName, $new_path)) {
                         @chmod($filename, 0666);
-                        $return['data']["succ"][$fk] = $new_path;
+                        $return['data']["succ"][$fk] = $this->web_dir . '/' . $this->sub_dir . '/' . $filename;
                         break;
                     } else {
                         $return['data']["fail"][] = $file["name"] . "不能移动临时文件";
@@ -219,12 +258,17 @@ class Common
     {
         if ($file["error"] != 0) return 5;
         if ($file["size"] > $this->maxsize) return 2;
+        if (!is_writable($this->directory)) return 4;
 //        var_dump();
         $type = getimagesize($file['tmp_name']);
         $type = $type['mime'];
-        if (!in_array($type, $this->allowType)) return 3;
-        if (!is_writable($this->directory)) return 4;
-        return 0;
+        if ($this->white_list_mode) {
+            if (!in_array($type, $this->whiteList)) return 3;
+            return 0;
+        } else {
+            if (!in_array($type, $this->whiteList)) return 0;
+            return 3;
+        }
     }
 
     protected function getFileName($file)

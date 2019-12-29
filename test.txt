@@ -1,0 +1,7 @@
+curl -F img=@/c/0037.png -F xxx=@/c/frl.gif http://127.0.0.1:1259/tests/upload.php
+
+curl -F xxx=@/c/q.png http://127.0.0.1:1259/tests/single.php
+
+curl -F xxx=@/c/windows/regedit.exe http://127.0.0.1:1259/tests/not_allow.php
+
+curl -F xxx=@/c/windows/regedit.exe http://127.0.0.1:1259/tests/allow.php

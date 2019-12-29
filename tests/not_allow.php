@@ -7,9 +7,9 @@
  */
 require_once __DIR__ . "/../vendor/autoload.php";
 
-$demo = new \Aw\Upload\Common();
-$demo->setUploadDir(__DIR__ . "/uploads", "/uploads");
+$demo = new \Aw\Upload\Single();
+$demo->setUploadDir(__DIR__ . "/uploads","/uploads");
 $demo->init();
 $ret = $demo->upload();
 
-var_dump($ret);
+var_dump($ret, $demo->error);
