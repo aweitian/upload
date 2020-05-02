@@ -7,6 +7,7 @@
  */
 require_once __DIR__ . "/../vendor/autoload.php";
 
+
 $demo = new \Aw\Upload\AliOss('...','...');
 
 $demo->max_size = 3 * 1024 * 1024;
