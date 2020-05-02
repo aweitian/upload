@@ -17,7 +17,8 @@
   ],
   "require": {
     "php": ">=5.3.0",
-    "aweitian/filesystem":"~2.0"
+    "aweitian/filesystem":"~2.0",
+    "aliyuncs/oss-sdk-php": "~2.0"
   },
   "require-dev": {
 
